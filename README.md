@@ -2,6 +2,8 @@
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
+## In the Excel file the data should be in the given format Like-S_no, Name , Phone_No , email and Tag.
+
 ## Available Scripts
 
 In the project directory, you can run:
