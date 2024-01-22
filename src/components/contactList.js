@@ -1,7 +1,3 @@
-import "./contactList.css";
-// FileUpload.js
-// FileUpload.js
-// FileUpload.js
 import React, { useState } from "react";
 import { useDropzone } from "react-dropzone";
 import readXlsxFile from "read-excel-file";
@@ -10,6 +6,8 @@ import "./contactList.css"; // Import your CSS file
 const FileUpload = () => {
   const [selectedFile, setSelectedFile] = useState(null);
   const [contacts, setContacts] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage, setItemsPerPage] = useState(10); // Adjust this value based on your preference
 
   const onDrop = async (acceptedFiles) => {
     const file = acceptedFiles[0];
@@ -76,6 +74,14 @@ const FileUpload = () => {
     }
   };
 
+  const paginate = (pageNumber) => {
+    setCurrentPage(pageNumber);
+  };
+
+  const indexOfLastContact = currentPage * itemsPerPage;
+  const indexOfFirstContact = indexOfLastContact - itemsPerPage;
+  const currentContacts = contacts.slice(indexOfFirstContact, indexOfLastContact);
+
   const { getRootProps, getInputProps } = useDropzone({
     accept: [".csv", ".xlsx", ".xls"],
     onDrop,
@@ -105,7 +111,7 @@ const FileUpload = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {contacts.map((contact, index) => (
+                  {currentContacts.map((contact, index) => (
                     <tr key={index}>
                       <td>{contact.S_no}</td>
                       <td>
@@ -120,6 +126,15 @@ const FileUpload = () => {
                   ))}
                 </tbody>
               </table>
+              <ul className="pagination">
+                {Array.from({ length: Math.ceil(contacts.length / itemsPerPage) }).map((_, index) => (
+                  <li key={index} className={`page-item ${currentPage === index + 1 ? "active" : ""}`}>
+                    <button onClick={() => paginate(index + 1)} className="page-link">
+                      {index + 1}
+                    </button>
+                  </li>
+                ))}
+              </ul>
               <button onClick={sendContactsToBackend}>Upload Contacts</button>
             </div>
           )}
