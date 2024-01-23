@@ -1,13 +1,13 @@
 import React, { useState } from "react";
 import { useDropzone } from "react-dropzone";
 import readXlsxFile from "read-excel-file";
-import "./contactList.css"; // Import your CSS file
+import "./contactList.css"; 
 
 const FileUpload = () => {
   const [selectedFile, setSelectedFile] = useState(null);
   const [contacts, setContacts] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const [itemsPerPage, setItemsPerPage] = useState(10); // Adjust this value based on your preference
+  const [itemsPerPage, setItemsPerPage] = useState(10); 
 
   const onDrop = async (acceptedFiles) => {
     const file = acceptedFiles[0];
@@ -16,9 +16,9 @@ const FileUpload = () => {
     try {
       let content;
       if (file.name.endsWith(".csv")) {
-        // Read CSV file
+       
         content = await file.text();
-        // Parse CSV content (you might need to adjust this parsing logic based on your CSV format)
+        
         const rows = content.split("\n").map((row) => row.split(","));
         const headers = rows[0];
         const contactsData = rows.slice(1).map((row) => {
@@ -30,9 +30,9 @@ const FileUpload = () => {
         });
         setContacts(contactsData);
       } else if (file.name.endsWith(".xlsx") || file.name.endsWith(".xls")) {
-        // Read Excel file
+       
         content = await readXlsxFile(file);
-        // Assuming the first row of the Excel file contains headers
+        
         const headers = content[0];
         const contactsData = content.slice(1).map((row) => {
           const contact = {};
@@ -55,7 +55,7 @@ const FileUpload = () => {
     try {
       const apiUrl = "http://localhost:8000/contact";
 
-      // Send each contact to the backend API
+      
       for (const contact of contacts) {
         const response = await fetch(apiUrl, {
           method: "POST",
@@ -65,7 +65,7 @@ const FileUpload = () => {
           body: JSON.stringify(contact),
         });
 
-        // Handle the response as needed
+        
         const result = await response.json();
         console.log("Contact added:", result);
       }
